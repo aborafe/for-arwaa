@@ -23,7 +23,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        overflow: hidden;
+        overflow: hidden; /* hide scrollbars; we'll scale to fit */
       }
 
       .container {
@@ -34,6 +34,8 @@
         box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3);
         max-width: 600px;
         width: 90%;
+        transform-origin: top center;
+        transition: transform 0.12s ease-out;
         animation: slideIn 0.8s ease-out;
       }
 
@@ -170,6 +172,7 @@
         color: #333;
         font-size: 1.1em;
         line-height: 1.8;
+        /* allow message to scale with the page; no internal scroll */
       }
     </style>
   </head>
@@ -193,9 +196,34 @@
       <div class="love-message" id="love-message" style="display: none">
         <p>😍 بحبك! أنتِ أحلى قرار اتخذته! 💕</p>
         <p>
-          يا أجمل قلب وأطيب روح، أنتِ نور عيني وسعادة قلبي.
-          <br />في كل لحظة معك أشعر بأن الحياة أجمل وأجمل. <br />أنتِ أجملُ ما
-          امتلكت في حياتي 💫
+          كل حب وأنتِ عيدي، هو أنا مش مستني عيد الحب يجي علشان أكتبلك كلام حلو
+          في يوم زي ده. أنتِ من يوم ما دخلتِ حياتي وأنا حياتي بقيت معاكِ حاجة
+          تانيه.
+          <br />
+          وعاوز أقولك: مش محتاج أكتب بوست لعيد الحب، لأني مش اليوم ده بس الا
+          هحبك فيه، بسانا السنة كلها بالنسبة لي عيد حب وأنتِ معايا.
+          <br />
+          حبيت قلبي علشان أنتِ فيه، مش بوست لحبيبتي هو اللي هيبين غلاوتك عندي.
+          أنتِ كل حاجة ليا يا حبيبتي وقرة عيني.
+          <br />
+          أنتِ أجمل وأحلى وأغلى حاجة ربنا رزقني بيها. من يوم ما دخلتِ حياتي،
+          كلها أنتِ الحاجة اللي ما ينفعش تتعوض ولا في منها اثنين اللي زيك. ما
+          يتقرنش بحد أصلاً، لأن اللي زيك قليل.
+          <br />
+          أنتِ أرفه غلاوتك عندي... لو قعدت أتكلم عنك مش هيكفي في حقك. يكفيني إنك
+          عارفه إنتِ بالنسبة لي إيه.
+          <br />
+          أنتِ أجمل وأحلى بنوتة سلت في الدنيا كلها. أنتِ الي حياتي مفهاش حلو
+          غيرك. أصلاً أنا ما حدش بيفرحني غير كنتِ. الروح اللي ساكنه في قلبي
+          وعقلي.
+          <br />
+          آخر حاجة عاوز أقولهالك: إنك أحلى صدفة في عمري. كل عام وأنتِ حبيبتي
+          وقلبي. كل عيد حب وأنتِ سعادتي وضحكتي. كل عيد حب وأنتِ مبسوطة ودايماً
+          أكون السبب في سعادتك.
+          <br />
+          كل عيد حب وأنتِ منورة حياتي وعمري. تفضلي نور عيني وحبيبة عمري. ويفرحنا
+          يا رب عن قريب. هابي فالنتاين يا روح قلبي. يديمك في حياتي طول العمر. كل
+          سنة وأنتِ معايا تنورين عيني 💕
         </p>
       </div>
 
@@ -386,9 +414,28 @@
     <script>
       let noClickCount = 0;
 
-      let yesButtonSize = 1.1;
-      let yesPadding = 15;
-      let yesPaddingH = 35;
+      const YES_INITIAL = {
+        fontSize: 1.6,
+        paddingV: 18,
+        paddingH: 45,
+        minWidth: 180,
+      };
+      let yesButtonSize = YES_INITIAL.fontSize;
+      let yesPadding = YES_INITIAL.paddingV;
+      let yesPaddingH = YES_INITIAL.paddingH;
+
+      function adjustScale() {
+        const container = document.querySelector(".container");
+        // compute needed height and available height
+        const needed = container.scrollHeight + 40; // small buffer
+        const avail = window.innerHeight;
+        const scale = Math.min(1, avail / needed);
+        // use zoom for better layout scaling across browsers (except FF)
+        document.body.style.zoom = scale;
+      }
+
+      window.addEventListener("load", adjustScale);
+      window.addEventListener("resize", adjustScale);
 
       function handleYes() {
         const yesBtn = document.getElementById("yesBtn");
@@ -399,8 +446,17 @@
         yesBtn.disabled = true;
         noBtn.disabled = true;
 
+        // reset yes button to initial size so it doesn't hide the message
+        yesBtn.style.fontSize = YES_INITIAL.fontSize + "em";
+        yesBtn.style.padding =
+          YES_INITIAL.paddingV + "px " + YES_INITIAL.paddingH + "px";
+        yesBtn.style.minWidth = YES_INITIAL.minWidth + "px";
+
         loveMessage.style.display = "block";
         photosSection.style.display = "block";
+
+        // adjust overall scale so no scrollbar appears and content fits
+        setTimeout(adjustScale, 80);
 
         // Create falling hearts
         createHearts();
@@ -426,14 +482,17 @@
 
         noClickCount++;
 
-        // زيادة حجم زر نعم بشكل واضح مع كل ضغطة على لا
-        yesButtonSize += 0.3;
-        yesPadding += 10;
-        yesPaddingH += 15;
+        // increase Yes button (allow larger growth per request) but cap at a reasonable max
+        yesButtonSize = Math.min(yesButtonSize + 0.45, 3.0);
+        yesPadding = Math.min(yesPadding + 12, 80);
+        yesPaddingH = Math.min(yesPaddingH + 20, 160);
 
         yesBtn.style.fontSize = yesButtonSize + "em";
         yesBtn.style.padding = yesPadding + "px " + yesPaddingH + "px";
-        yesBtn.style.minWidth = 120 + noClickCount * 40 + "px";
+        yesBtn.style.minWidth = Math.min(120 + noClickCount * 60, 700) + "px";
+
+        // after changing size, re-adjust scale so page still fits without scroll
+        setTimeout(adjustScale, 60);
       }
 
       function createHearts() {
