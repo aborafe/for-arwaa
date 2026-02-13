@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رسالة حب في الفلنتاين</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #ff6b9d 0%,
+          #ffd1dc 50%,
+          #fff5f7 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 60px 40px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3);
+        max-width: 600px;
+        width: 90%;
+        animation: slideIn 0.8s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .heart-animation {
+        font-size: 80px;
+        margin-bottom: 30px;
+        animation: heartbeat 1.2s infinite;
+      }
+
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
+
+      h1 {
+        color: #ff4757;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        line-height: 1.3;
+      }
+
+      .message {
+        color: #333;
+        font-size: 1.3em;
+        line-height: 1.8;
+        margin-bottom: 30px;
+        font-weight: 300;
+      }
+
+      .love-text {
+        color: #ff6b9d;
+        font-weight: bold;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+      }
+
+      button {
+        padding: 15px 35px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .yes-btn {
+        background: linear-gradient(135deg, #ff6b9d, #ff8fb3);
+        color: white;
+        min-width: 150px;
+      }
+
+      .yes-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+      }
+
+      .no-btn {
+        background: linear-gradient(135deg, #ffd1dc, #ffe5ec);
+        color: #ff6b9d;
+        min-width: 150px;
+        position: relative;
+      }
+
+      .no-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2);
+      }
+
+      .response {
+        display: none;
+        font-size: 1.5em;
+        color: #ff4757;
+        margin-top: 30px;
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .flowers {
+        position: fixed;
+        pointer-events: none;
+        font-size: 2em;
+        opacity: 0;
+        animation: fall 3s ease-in forwards;
+      }
+
+      @keyframes fall {
+        to {
+          opacity: 0;
+          transform: translateY(100vh) rotate(360deg);
+        }
+      }
+
+      .love-message {
+        margin-top: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #fff5f7, #ffe5ec);
+        border-radius: 10px;
+        color: #333;
+        font-size: 1.1em;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heart-animation">💕</div>
+
+      <h1>
+        <span id="receiver-name">اروي</span> 🌹
+        <br />
+        هل تحبيني؟
+      </h1>
+
+      <div class="buttons">
+        <button class="yes-btn" id="yesBtn" onclick="handleYes()">
+          نعم ❤️
+        </button>
+        <button class="no-btn" id="noBtn" onclick="handleNo()">لا 😔</button>
+      </div>
+
+      <div class="love-message" id="love-message" style="display: none">
+        <p>😍 بحبك! أنتِ أحلى قرار اتخذته! 💕</p>
+        <p>
+          يا أجمل قلب وأطيب روح، أنتِ نور عيني وسعادة قلبي.
+          <br />في كل لحظة معك أشعر بأن الحياة أجمل وأجمل. <br />أنتِ أجملُ ما
+          امتلكت في حياتي 💫
+        </p>
+      </div>
+
+      <!-- مساحة الصور -->
+      <div
+        id="photos-section"
+        style="
+          display: none;
+          margin-top: 30px;
+          padding: 20px;
+          background: linear-gradient(135deg, #fff5f7, #ffe5ec);
+          border-radius: 10px;
+        "
+      >
+        <h3 style="color: #ff4757; margin-bottom: 15px">📸 ذكرياتنا الجميلة</h3>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+          "
+        >
+          <!-- الصورة الأولى -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/a042c1b5-d3ef-487a-a28f-bbb558aca162.jpg"
+              id="photo1"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 1"
+              onload="
+                document.getElementById('photo1-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo1').style.display = 'none'"
+            />
+            <span id="photo1-placeholder"
+              >ضع رابط الصورة الأولى هنا<br />id="photo1"</span
+            >
+          </div>
+
+          <!-- الصورة الثانية -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/44b9fc68-baa8-4394-bc55-701d96d8a583.jpg"
+              id="photo2"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 2"
+              onload="
+                document.getElementById('photo2-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo2').style.display = 'none'"
+            />
+            <span id="photo2-placeholder"
+              >ضع رابط الصورة الثانية هنا<br />id="photo2"</span
+            >
+          </div>
+
+          <!-- الصورة الثالثة -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/bb8bed58-6de8-451f-8ff1-2abe1ac3db14.jpg"
+              id="photo3"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 3"
+              onload="
+                document.getElementById('photo3-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo3').style.display = 'none'"
+            />
+            <span id="photo3-placeholder"
+              >ضع رابط الصورة الثالثة هنا<br />id="photo3"</span
+            >
+          </div>
+
+          <!-- الصورة الرابعة -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/df707aed-6f91-4055-badf-0e7ccdcfbac6.jpg"
+              id="photo4"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 4"
+              onload="
+                document.getElementById('photo4-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo4').style.display = 'none'"
+            />
+            <span id="photo4-placeholder"
+              >ضع رابط الصورة الرابعة هنا<br />id="photo4"</span
+            >
+          </div>
+
+          <!-- الصورة الخامسة -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/54f40f9e-8bcc-4ae5-9f16-ef2415140c04.jpg"
+              id="photo5"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 5"
+              onload="
+                document.getElementById('photo5-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo5').style.display = 'none'"
+            />
+            <span id="photo5-placeholder"
+              >ضع رابط الصورة الخامسة هنا<br />id="photo5"</span
+            >
+          </div>
+
+          <!-- الصورة السادسة -->
+          <div
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 10px;
+              padding: 30px;
+              text-align: center;
+              color: #999;
+              font-size: 0.9em;
+            "
+          >
+            <img
+              src="image/1.jpeg"
+              id="photo6"
+              style="max-width: 100%; border-radius: 8px"
+              alt="صورة 6"
+              onload="
+                document.getElementById('photo6-placeholder').style.display =
+                  'none'
+              "
+              onerror="document.getElementById('photo6').style.display = 'none'"
+            />
+            <span id="photo6-placeholder"
+              >ضع رابط الصورة السادسة هنا<br />id="photo6"</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let noClickCount = 0;
+
+      let yesButtonSize = 1.1;
+      let yesPadding = 15;
+      let yesPaddingH = 35;
+
+      function handleYes() {
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        const loveMessage = document.getElementById("love-message");
+        const photosSection = document.getElementById("photos-section");
+
+        yesBtn.disabled = true;
+        noBtn.disabled = true;
+
+        loveMessage.style.display = "block";
+        photosSection.style.display = "block";
+
+        // Create falling hearts
+        createHearts();
+      }
+
+      function handleNo() {
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+
+        const noMessages = [
+          "فكري مرة أخرى 🥺",
+          "أنا متأكد أنك ستقولين نعم 😊",
+          "دعيني أحاول مرة أخرى 🌹",
+          "أرجوكِ قولي نعم 💘",
+          "هياا... نعم! 🎉",
+          "لا يمكن أن تقولي لا 💔",
+          "أنتِ في قلبي 💕",
+        ];
+
+        if (noClickCount < noMessages.length) {
+          noBtn.textContent = noMessages[noClickCount];
+        }
+
+        noClickCount++;
+
+        // زيادة حجم زر نعم بشكل واضح مع كل ضغطة على لا
+        yesButtonSize += 0.3;
+        yesPadding += 10;
+        yesPaddingH += 15;
+
+        yesBtn.style.fontSize = yesButtonSize + "em";
+        yesBtn.style.padding = yesPadding + "px " + yesPaddingH + "px";
+        yesBtn.style.minWidth = 120 + noClickCount * 40 + "px";
+      }
+
+      function createHearts() {
+        for (let i = 0; i < 20; i++) {
+          const flower = document.createElement("div");
+          flower.className = "flowers";
+          flower.textContent = "💕";
+          flower.style.left = Math.random() * 100 + "%";
+          flower.style.top = "-50px";
+          flower.style.animationDelay = Math.random() * 0.5 + "s";
+          document.body.appendChild(flower);
+
+          setTimeout(() => flower.remove(), 3000);
+        }
+      }
+    </script>
+  </body>
+</html>
